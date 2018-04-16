@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Add multiple fields to form</title>
+
+    <!-- Bootstrap -->
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+  <div class="container">
+<div class="col-lg-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+           Add multiple fields to form:
+        </div>
+        <!-- /.panel-heading -->
+        <div class="panel-body">
+
+
+            <form class="" role="search" method="POST">
+
+      
+                <div class="row">
+                    <a href="#" id="add_input">Add Field</a>   <a href="#" id="view_source">View Source</a>
+                </div>
+<br/>
+                <div class="row">
+                    <div class="col-xs-5">
+                        <label for=""> Key</label>
+                    </div>
+                    <div class="col-xs-5">
+                        <label for=""> Value</label>
+                    </div>
+                    <div class="col-xs-2">
+                        <label for=""> Action</label>
+                    </div>
+
+                </div>
+            <div id="sortable">
+                <div class="row toggle">
+                    <div class="col-xs-5">
+                        <input type="text" class="form-control" placeholder="Key" name="key[]">
+                    </div>
+                    <div class="col-xs-5">
+                        <input type="text" class="form-control" placeholder="Value" name="value[]">
+                    </div>
+                    <div class="col-xs-2">
+                        <a href="#" class="remScnt">Remove</a>
+                    </div>
+
+                </div>
+                <div class="row toggle">
+                    <div class="col-xs-5">
+                        <input type="text" class="form-control" placeholder="Key" name="key[]">
+                    </div>
+                    <div class="col-xs-5">
+                        <input type="text" class="form-control" placeholder="Value" name="value[]">
+                    </div>
+                    <div class="col-xs-2">
+                        <a href="#" class="remScnt">Remove</a>
+                    </div>
+
+                </div>
+                <div class="row toggle">
+                    <div class="col-xs-5">
+                        <input type="text" class="form-control" placeholder="Key" name="key[]">
+                    </div>
+                    <div class="col-xs-5">
+                        <input type="text" class="form-control" placeholder="Value" name="value[]">
+                    </div>
+                    <div class="col-xs-2">
+                        <a href="#" class="remScnt">Remove</a>
+                    </div>
+
+                </div>
+            </div>
+                <textarea id="source_form" class="form-control"></textarea>
+                <a href="#" id="save_source">View Source</a>
+                <button type="submit" class="btn btn-default">Submit</button>
+            </form>
+
+
+        </div>
+        <!-- /.panel-body -->
+    </div>
+    <!-- /.panel -->
+    <!-- /.col-lg-12 -->
+</div>
+
+</div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $( "#sortable" ).sortable({
+            revert: true,
+            receive: function(event, ui) {
+                var html = [];
+                $(this).find('li').each(function() {
+                    html.push('<div class="toggle">'+$(this).html()+'</div>');
+                });
+                $(this).find('li').replaceWith(html.join(''));
+            }
+        });
+        var mainDiv = $('#sortable');
+        var html = '<div class="row toggle"> <div class="col-xs-5"> <input type="text" class="form-control" placeholder="Key" name="key[]"> </div> <div class="col-xs-5"> <input type="text" class="form-control" placeholder="Value" name="value[]"> </div><div class="col-xs-2"> <a href="#" class="remScnt">Remove</a> </div> </div>';
+
+        $('#add_input').click(function() {
+
+            $(html).appendTo(mainDiv);
+            return false;
+        });
+
+        $('#view_source').click(function() {
+            var form_dat = '';
+           var form_data = $('#sortable :input').serializeArray();
+            var lenght = form_data.length;
+            $( "#source_form" ).val('');
+            jQuery.each( form_data, function( i, field ) {
+                if(field.name == 'key[]'){
+                    form_dat +=  field.value + ":";
+                }
+                else if(parseInt(lenght - 1) == i){
+                    form_dat +=  field.value + "" ;
+                }
+                else{
+                    form_dat +=  field.value + "\n" ;
+                }
+
+            });
+            $( "#source_form" ).val(form_dat);
+            return false;
+        });
+
+        $('#save_source').click(function() {
+
+            var form_data = $( "#source_form" ).val().split('\n');
+
+            console.log(form_data);
+
+            $("#sortable").html();
+            var html = '';
+
+            jQuery.each( form_data, function( i, field ) {
+               // console.log(field);
+                var text = field.split(':');
+                console.log(text[0]);
+                console.log(text[1]);
+                html += '<div class="row toggle"> ' +
+                '<div class="col-xs-5">' +
+                ' <input type="text" class="form-control" placeholder="Key" name="key[]" value="'+ text[0] +'"> </div>' +
+                ' <div class="col-xs-5"> <input type="text" class="form-control" placeholder="Value" name="value[]" value="'+ text[1] +'"> </div>' +
+                '<div class="col-xs-2"> <a href="#" class="remScnt">Remove</a> </div> </div>';
+
+            });
+            $("#sortable").html(html);
+
+            return false;
+        });
+
+
+        $(document).delegate(".remScnt", "click", function() {
+            $(this).parent('div').parent('.row').remove();
+            return false;
+        });
+
+
+
+    });
+
+</script>  
+  </body>
+</html>
